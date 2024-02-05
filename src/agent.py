@@ -98,8 +98,8 @@ class Agent:
             final_move[move] = 1
             
         return final_move
-            
-            
+
+
 def train():
     plot_scores = []
     plot_mean_scores = []
@@ -145,5 +145,33 @@ def train():
             plot(plot_scores, plot_mean_scores)
 
 
+def ai_play():
+    game = SnakeGameAI()
+    agent = Agent()
+
+    agent.number_games = 500
+    
+    agent.model.load_state_dict(torch.load('./model/model.pth'))
+    agent.model.eval()
+    
+    # game loop
+    while True:
+        # Get old state
+        state_old = agent.get_state(game)
+        
+        # Get move
+        final_move = agent.get_action(state_old)
+        
+        # Perform move
+        reward, done, score = game.play_step(final_move)
+        
+        if done:
+            break
+        
+    print('Final Score:', score)  
+
+
 if __name__ == "__main__":
-    train()
+    # train()
+    
+    ai_play()
