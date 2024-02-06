@@ -7,6 +7,8 @@ from snake_game_ai import SnakeGameAI, Direction, Point, BLOCK_SIZE
 from model import Liner_QNet, QTrainer
 from helper import plot
 
+import sys
+
 MAX_MEMORY = 100_000
 BATCH_SIZE = 1000
 LR = 0.001
@@ -134,7 +136,7 @@ def train():
             
             if score > record:
                 record = score
-                agent.model.save()
+                agent.model.save(record, agent.number_games)
                 
             print('Game:', agent.number_games, ', Score:', score, ', Record:', record)
             
@@ -163,7 +165,7 @@ def ai_play():
         final_move = agent.get_action(state_old)
         
         # Perform move
-        reward, done, score = game.play_step(final_move)
+        _, done, score = game.play_step(final_move)
         
         if done:
             break
@@ -172,6 +174,12 @@ def ai_play():
 
 
 if __name__ == "__main__":
-    # train()
-    
-    ai_play()
+    if len(sys.argv) != 2:
+        print("Usage: python agent.py {option}\n- option: 'train' if you want to train the model or 'play' if you want the model to play the game")
+    else:
+        if sys.argv[1] == 'train':
+            train()
+        elif sys.argv[1] == 'play':
+            ai_play()
+        else:
+            print("Usage: python agent.py {option}\n- option: 'train' if you want to train the model or 'play' if you want the model to play the game")
