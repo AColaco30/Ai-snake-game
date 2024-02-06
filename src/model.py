@@ -18,11 +18,17 @@ class Liner_QNet(nn.Module):
         
         return x
     
-    def save(self, file_name='model.pth'):
+    def save(self, record, number_games, file_name='model .pth'):
         model_folder_path = './model'
         if not os.path.exists(model_folder_path):
             os.makedirs(model_folder_path)
-            
+
+        aux = file_name.split(' ')
+        aux.insert(1, '_'+str(number_games))
+        aux.insert(1, '_'+str(record))
+        file_name = ''.join(aux)
+        print(file_name)
+        
         file_name = os.path.join(model_folder_path, file_name)
         torch.save(self.state_dict(), file_name)
         
